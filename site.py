@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 
 path = Path("./extractions")
+pathImg = Path(f"{path.resolve()}/Images")
 
 page = get("http://books.toscrape.com/")
 if page.status_code == 200:
@@ -19,7 +20,8 @@ if page.status_code == 200:
     except:
         print(f"Impossible de supprimer le dossier {path.resolve()}")     # Arrêt --
     else:
-        path.mkdir()        # Création du dossier
+        path.mkdir()        # Création des dossiers
+        pathImg.mkdir()
 
         # -- Recherche des catégories et lancement des lectures
         soup = BeautifulSoup(page.content, "html.parser")

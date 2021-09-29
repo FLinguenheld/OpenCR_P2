@@ -6,14 +6,26 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import csv
 
-
 def lectureCategorie(url, cheminDossier, progression):
+
+    """ Fonction permettant de lire et d'enregistrer dans un fichier csv des informations pour toute une catégorie d'article du site http://books.toscrape.com/
+        Ces informations sont définies ici avec la liste "enTete" puis recueillies et retournées par le module "article"
+
+        Étapes :
+                    Création du fichier csv avec le nom de la catégorie (écrasé si existant)
+                    Ajout des en-têtes
+                    Traitement puis ajout de chaque article dans le fichier csv
+
+        Arguments :
+            url (str) :             url de la catégorie (sans la première partie : "http://books.toscrape.com/catalogue")
+            cheminDossier (str) :   chemin du dossier où enregitrer le fichier csv (sans le / final)
+            progression (str) :     texte de progression à afficher dans le terminal (complété ici avec le nom de la catégorie puis affiché par le module "article")
+    """
 
     page = get(url)
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, "html.parser")
         catEnCours = soup.find('div', class_='page-header action').find('h1').string
-        #print(f" -- Catégorie en cours : {catEnCours}")
 
         enTete = ["product_page_url",
                 "universal_product_code",
@@ -34,19 +46,17 @@ def lectureCategorie(url, cheminDossier, progression):
             while True:
 
                 page = get(url)
-                #print(f" -- Page {i}")
                 if page.status_code == 200:
                     soup = BeautifulSoup(page.content, "html.parser")
 
                     for elt in soup.find_all("h3"):
-                       writer.writerow(lectureArticle("http://books.toscrape.com/catalogue" + elt.find("a")["href"][8:], f"{progression} -- {catEnCours}"))
+                        writer.writerow(lectureArticle("http://books.toscrape.com/catalogue" + elt.find("a")["href"][8:], f"{cheminDossier}/Images", f"{progression} -- {catEnCours}"))
 
                     suiv = soup.find("li", class_="next")
                     if suiv != None:
                         url = urljoin(page.url, suiv.find("a")["href"])
                         i += 1
                     else:
-                        #print(" -- Fin")
                         break
 
                 else:
