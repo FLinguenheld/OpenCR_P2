@@ -7,13 +7,13 @@ from urllib.parse import urljoin
 import csv
 
 
-def lectureCategorie(url, cheminDossier):
+def lectureCategorie(url, cheminDossier, progression):
 
     page = get(url)
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, "html.parser")
         catEnCours = soup.find('div', class_='page-header action').find('h1').string
-        print(f" -- Catégorie en cours : {catEnCours}")
+        #print(f" -- Catégorie en cours : {catEnCours}")
 
         enTete = ["product_page_url",
                 "universal_product_code",
@@ -34,19 +34,19 @@ def lectureCategorie(url, cheminDossier):
             while True:
 
                 page = get(url)
-                print(f" -- Page {i}")
+                #print(f" -- Page {i}")
                 if page.status_code == 200:
                     soup = BeautifulSoup(page.content, "html.parser")
 
                     for elt in soup.find_all("h3"):
-                       writer.writerow(lectureArticle("http://books.toscrape.com/catalogue" + elt.find("a")["href"][8:]))
+                       writer.writerow(lectureArticle("http://books.toscrape.com/catalogue" + elt.find("a")["href"][8:], f"{progression} -- {catEnCours}"))
 
                     suiv = soup.find("li", class_="next")
                     if suiv != None:
                         url = urljoin(page.url, suiv.find("a")["href"])
                         i += 1
                     else:
-                        print(" -- Fin")
+                        #print(" -- Fin")
                         break
 
                 else:
@@ -56,4 +56,4 @@ def lectureCategorie(url, cheminDossier):
 
 # --
 if __name__ == "__main__":
-   lectureCategorie("http://books.toscrape.com/catalogue/category/books/add-a-comment_18/index.html", "./extractions")
+    lectureCategorie("http://books.toscrape.com/catalogue/category/books/add-a-comment_18/index.html", "./extractions", "Test : ")

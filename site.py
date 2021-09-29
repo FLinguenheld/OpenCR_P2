@@ -19,12 +19,24 @@ if page.status_code == 200:
     except:
         print(f"Impossible de supprimer le dossier {path.resolve()}")     # Arrêt --
     else:
+        path.mkdir()        # Création du dossier
 
-        # Création du dossier et récup des catégories
-        path.mkdir()
-
+        # -- Recherche des catégories et lancement des lectures
         soup = BeautifulSoup(page.content, "html.parser")
         liste = soup.find("ul", class_="nav nav-list").find("ul").find_all("a")
+        print("Traitement en cours")
 
-        for c in liste:
-            lectureCategorie("http://books.toscrape.com/" + c["href"], path.resolve())
+        # -- Création d'une barre de progression envoyée au module article pour l'affichage
+        progression = str()
+        for i, c in enumerate(liste):
+            progression = "["
+            for j in range(15):
+                if j <= int(i * 15 / len(liste)):
+                    progression +="X"
+                else:
+                    progression +="–"
+
+            progression += "]"
+
+            # --
+            lectureCategorie("http://books.toscrape.com/" + c["href"], path.resolve(), progression)
