@@ -1,14 +1,14 @@
 #! env/bin/python3
 
-import article 
+from article import lectureArticle
 from requests import get
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import csv
 
 
-def lectureArticle(url):
-        
+def lectureCategorie(url, cheminDossier):
+
     page = get(url)
     if page.status_code == 200:
         soup = BeautifulSoup(page.content, "html.parser")
@@ -26,7 +26,7 @@ def lectureArticle(url):
                 "review_rating",
                 "image_url"]
 
-        with open(f"{catEnCours}.csv", "w") as fichier:
+        with open(f"{cheminDossier}/{catEnCours}.csv", "w") as fichier:
             writer = csv.writer(fichier)
             writer.writerow(enTete)
 
@@ -39,7 +39,7 @@ def lectureArticle(url):
                     soup = BeautifulSoup(page.content, "html.parser")
 
                     for elt in soup.find_all("h3"):
-                       writer.writerow(article.lectureArticle("http://books.toscrape.com/catalogue" + elt.find("a")["href"][8:]))
+                       writer.writerow(lectureArticle("http://books.toscrape.com/catalogue" + elt.find("a")["href"][8:]))
 
                     suiv = soup.find("li", class_="next")
                     if suiv != None:
@@ -52,8 +52,8 @@ def lectureArticle(url):
                 else:
                     print(f"Impossible d'acceder à {url}")
                     break
-                
+
 
 # --
 if __name__ == "__main__":
-   lectureArticle("http://books.toscrape.com/catalogue/category/books/add-a-comment_18/index.html") 
+   lectureCategorie("http://books.toscrape.com/catalogue/category/books/add-a-comment_18/index.html", "./extractions")

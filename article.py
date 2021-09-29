@@ -30,7 +30,7 @@ def lectureArticle(url):
         info.append(toFloat(listeTD[2].string))                                     # -- price_including_tax
         info.append(toFloat(listeTD[3].string))                                     # -- price_excluding_tax
         info.append(toInt(listeTD[5].string))                                       # -- number_available
-    
+
         # -- product_description
         info.append(soup.find("article", class_="product_page").find_all("p")[3].string)
 
@@ -41,9 +41,10 @@ def lectureArticle(url):
         chiffres = ("One", "Two", "Three", "Four", "Five")
         for i, elt in enumerate(chiffres):
             etoiles = soup.find("div", class_="col-sm-6 product_main").find("p", class_=f"star-rating {elt}")
-        
+
             if etoiles != None:
                 info.append(i + 1)
+                break
 
         # -- image_url
         info.append("http://books.toscrape.com" + soup.find("img", alt=info[2])["src"][5:])   # Utilise le title pour la recherche
