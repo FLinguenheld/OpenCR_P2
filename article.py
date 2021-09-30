@@ -3,6 +3,9 @@
 from requests import get
 from bs4 import BeautifulSoup
 
+# -- Global
+compteurArticle = 0
+
 # -- Conversions Int/Float
 toInt = lambda chaine : int("".join([nb for nb in chaine if nb.isdigit()]))
 toFloat = lambda chaine : float("".join([nb for nb in chaine if (nb.isdigit() or nb == '.')]))
@@ -43,6 +46,7 @@ def lectureArticle(url, cheminImage, progression):
             progression (str) : texte de progression à afficher dans le terminal (à gauche des ajouts de cette fonction)
     """
 
+    global compteurArticle
     info = list()
     page = get(url)
     if page.status_code == 200:
@@ -91,6 +95,7 @@ def lectureArticle(url, cheminImage, progression):
 
         # -- Progression
         print(f"\033[K{etoile(f'{progression} -> {info[2][:60]}')}", end="\r")        # \033[K : permet d'effacer la ligne
+        compteurArticle += 1
 
         return info
 
@@ -99,3 +104,4 @@ if __name__ == "__main__":
     liste = lectureArticle("http://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html",  "./extractions", "Test : ")
     for elt in liste:
         print(f"   -  {elt}")
+

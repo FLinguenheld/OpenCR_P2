@@ -1,10 +1,13 @@
 #! env/bin/python3
 
-from categorie import lectureCategorie
 from pathlib import Path
 import shutil
+
 from requests import get
 from bs4 import BeautifulSoup
+
+import categorie
+import article
 
 
 path = Path("./extractions")
@@ -27,6 +30,7 @@ if page.status_code == 200:
             # -- Recherche des catégories et lancement des lectures
             soup = BeautifulSoup(page.content, "html.parser")
             liste = soup.find("ul", class_="nav nav-list").find("ul").find_all("a")
+            liste.sort(key=lambda elem : elem.string)       # Affichage plus agréable
             print("Traitement en cours")
 
             # -- Création d'une barre de progression envoyée au module article pour l'affichage
@@ -42,10 +46,13 @@ if page.status_code == 200:
                 progression += "]"
 
                 # --
-                lectureCategorie("http://books.toscrape.com/" + c["href"], path.resolve(), progression)
+                categorie.lectureCategorie("http://books.toscrape.com/" + c["href"], path.resolve(), progression)
 
-            print("Extraction terminée")
+            print("\nExtraction terminée")
 
         except AttributeError:
-            print("\nErreur lors de la recherche d'une balise - Extraction impossible")     # 5ite modifié, revoir les soup.find
+            print("\nErreur lors de la recherche d'une balise - Extraction impossible")     # Site modifié, revoir les soup.find
+
+        finally:
+            print(f"\n{categorie.compteurCategorie} catégories et {article.compteurArticle} articles traités")
 
