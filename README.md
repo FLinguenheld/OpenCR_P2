@@ -1,4 +1,4 @@
-## OpenCR_P2:8
+## OpenCR_P2
 OpenClassRooms Projet 2  
 Utilisez les bases de Python pour l'analyse de marché  
 2021-09-29
