@@ -23,24 +23,29 @@ if page.status_code == 200:
         path.mkdir()        # Création des dossiers
         pathImg.mkdir()
 
-        # -- Recherche des catégories et lancement des lectures
-        soup = BeautifulSoup(page.content, "html.parser")
-        liste = soup.find("ul", class_="nav nav-list").find("ul").find_all("a")
-        print("Traitement en cours")
+        try:
+            # -- Recherche des catégories et lancement des lectures
+            soup = BeautifulSoup(page.content, "html.parser")
+            liste = soup.find("ul", class_="nav nav-list").find("ul").find_all("a")
+            print("Traitement en cours")
 
-        # -- Création d'une barre de progression envoyée au module article pour l'affichage
-        progression = str()
-        for i, c in enumerate(liste):
-            progression = "["
-            for j in range(15):
-                if j <= int(i * 15 / len(liste)):
-                    progression +="X"
-                else:
-                    progression +="–"
+            # -- Création d'une barre de progression envoyée au module article pour l'affichage
+            progression = str()
+            for i, c in enumerate(liste):
+                progression = "["
+                for j in range(14):
+                    if j <= int(i * 14 / len(liste)):
+                        progression +="X"
+                    else:
+                        progression +="–"
 
-            progression += "]"
+                progression += "]"
 
-            # --
-            lectureCategorie("http://books.toscrape.com/" + c["href"], path.resolve(), progression)
+                # --
+                lectureCategorie("http://books.toscrape.com/" + c["href"], path.resolve(), progression)
 
-        print("Extraction terminée")
+            print("Extraction terminée")
+
+        except AttributeError:
+            print("\nErreur lors de la recherche d'une balise - Extraction impossible")     # 5ite modifié, revoir les soup.find
+

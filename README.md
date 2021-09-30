@@ -1,7 +1,6 @@
 ## OpenCR_P2
 OpenClassRooms Projet 2  
 Utilisez les bases de Python pour l'analyse de marché  
-2021-09-29
 
 ![Logo FLinguenheld](https://github.com/FLinguenheld/OpenCR_P2/blob/main/Forelif.png "Pouet")
 ****
@@ -19,7 +18,7 @@ Autorisez l'execution du fichier extractionBooksToScrape.py :
 >chmod +x extractionBooksToScrape.py
 
 
-lancez le script :  
+Lancez le script :  
 >./extractionBooksToScrape.py
 ****
 ### Déroulement
