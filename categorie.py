@@ -1,33 +1,18 @@
 #! env/bin/python3
 
 from urllib.parse import urljoin
-import csv
 
 from requests import get
 from bs4 import BeautifulSoup
 
-import article
+import livre
+import fichiers
 
 # -- Global
 compteurCategorie = 0
 
 # --
-def lectureCategorie(url, cheminDossier, progression):
-
-    """ Fonction permettant de lire et d'enregistrer dans un fichier csv des informations pour toute une catégorie
-        d'article du site http://books.toscrape.com/
-        Ces informations sont définies ici avec la liste "enTete" puis recueillies et retournées par le module "article"
-
-        Étapes :
-                    Création du fichier csv avec le nom de la catégorie (écrasé si existant)
-                    Ajout des en-têtes
-                    Traitement puis ajout de chaque article dans le fichier csv
-
-        Arguments :
-            url (str) :             url de la catégorie (sans la première partie : "http://books.toscrape.com/catalogue")
-            cheminDossier (str) :   chemin du dossier où enregitrer le fichier csv (sans le / final)
-            progression (str) :     texte de progression à afficher dans le terminal (complété ici puis affiché par le module "article")
-    """
+def lecture(url, progression):
 
     global compteurCategorie
     page = get(url)
@@ -35,44 +20,59 @@ def lectureCategorie(url, cheminDossier, progression):
         soup = BeautifulSoup(page.content, "html.parser")
         catEnCours = soup.find('div', class_='page-header action').find('h1').string
 
-        enTete = ["product_page_url",
-                "universal_product_code",
-                "title",
-                "price_including_tax",
-                "price_excluding_tax",
-                "number_available",
-                "product_description",
-                "category",
-                "review_rating",
-                "image_url"]
 
-        with open(f"{cheminDossier}/{catEnCours}.csv", "w") as fichier:
-            writer = csv.writer(fichier)
-            writer.writerow(enTete)
+        while True:
+            page = get(url)
+            if page.status_code == 200:
+                soup = BeautifulSoup(page.content, "html.parser")
 
-            while True:
-                page = get(url)
-                if page.status_code == 200:
-                    soup = BeautifulSoup(page.content, "html.parser")
+                for elt in soup.find_all("h3"):
+                    infoLivre = livre.lire(f"http://books.toscrape.com/catalogue/{elt.find('a')['href'][8:]}")
 
-                    for elt in soup.find_all("h3"):
-                        writer.writerow(article.lectureArticle("http://books.toscrape.com/catalogue" + elt.find("a")["href"][8:], f"{cheminDossier}/Images", f"{progression} -- {catEnCours}"))
+                    # -- Progression
+                    afficherProgression(progression, f"{infoLivre[7]} -> {infoLivre[2][:60]}")
+                    fichiers.ajouterLivre(infoLivre[7], infoLivre)
+                    fichiers.copierCouverture(infoLivre[9], infoLivre[2], infoLivre[1])
 
-                    compteurCategorie += 1
 
-                    # Page suivante ?
-                    suiv = soup.find("li", class_="next")
-                    if suiv != None:
-                        url = urljoin(page.url, suiv.find("a")["href"])
-                    else:
-                        break
+                compteurCategorie += 1
 
+                # Page suivante ?
+                suiv = soup.find("li", class_="next")
+                if suiv != None:
+                    url = urljoin(page.url, suiv.find("a")["href"])
                 else:
-                    print(f"Impossible d'acceder à {url}")
                     break
+
+            else:
+                print(f"Impossible d'acceder à {url}")
+                break
+
+
+# -- Affichage de la progression
+compteur = 0
+def afficherProgression(progression, txt):
+    """ Fait évoluer la progression pour faire tourner la barre en cours ;)
+    """
+    global compteur
+    l = ["|", "/", "–", "\\", "|", "/", "–", "\\"]
+
+    compteur += 1
+    if compteur >= 8:
+        compteur = 0
+
+    for i, c in enumerate(progression):
+        if c == "–":
+            #progression =  f"[{progression[:i]}{l[compteur]}{progression[i:]}]" 
+            progression =  f"[{l[compteur]}]" 
+            break
+
+    print(f"\033[K{progression} -> {txt}", end="\r")        # \033[K : permet d'effacer la ligneo
+
+
 
 
 # --
 if __name__ == "__main__":
-    lectureCategorie("http://books.toscrape.com/catalogue/category/books/add-a-comment_18/index.html", "./extractions", "Test : ")
+    lecture("http://books.toscrape.com/catalogue/category/books/add-a-comment_18/index.html", "[–]")
 
