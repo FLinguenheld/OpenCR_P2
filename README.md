@@ -14,7 +14,7 @@ Activez l'environnement virtuel avec la commande :
 >source env/bin/activate
 ****
 ### Programme
-Autorisez l'execution du fichier extractionBooksToScrape.py :  
+Autorisez l'execution du fichier bookToScrap.py :  
 >chmod +x bookToScrap.py
 
 

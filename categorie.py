@@ -41,7 +41,7 @@ def lecture(url, progression):
 
             # Page suivante ?
             suiv = soup.find("li", class_="next")
-            if suiv != None:
+            if suiv is not None:
                 url = urljoin(page.url, suiv.find("a")["href"])
             else:
                 break

@@ -62,7 +62,7 @@ def lire(url):
         for i, elt in enumerate(chiffres):
             etoiles = soup.find("div", class_="col-sm-6 product_main").find("p", class_=f"star-rating {elt}")
 
-            if etoiles != None:
+            if etoiles is not None:
                 info.append(i + 1)
                 break
 
