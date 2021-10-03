@@ -1,10 +1,21 @@
 #! env/bin/python3
+""" Module livre pour scraper un article du site http://books.toscrape.com/ """
 
 from requests import get
 from bs4 import BeautifulSoup
 
-# -- Global
-compteurArticle = 0
+compteurLivre = 0
+ENTETE = [      "product_page_url",
+                "universal_product_code",
+                "title",
+                "price_including_tax",
+                "price_excluding_tax",
+                "number_available",
+                "product_description",
+                "category",
+                "review_rating",
+                "image_url"]
+
 
 # -- Conversions Int/Float
 toInt = lambda chaine : int("".join([nb for nb in chaine if nb.isdigit()]))
@@ -12,9 +23,14 @@ toFloat = lambda chaine : float("".join([nb for nb in chaine if (nb.isdigit() or
 
 # --
 def lire(url):
+    """ Parcours la page renseignée, enregistre et retourne dans une liste les informations.
+        L'ordre correspond à la constante ENTETE.
 
+        Arguments :
+            url (str) :     Lien d'une page article du site BookToScrap
+    """
 
-    global compteurArticle
+    global compteurLivre
     info = list()
     page = get(url)
     if page.status_code == 200:
@@ -53,11 +69,18 @@ def lire(url):
         # -- 9 - image_url
         info.append("http://books.toscrape.com" + soup.find("img", alt=info[2])["src"][5:])   # Utilise le title pour la recherche
 
+        # --
+        compteurLivre += 1
         return info
+
+    else:
+        raise ConnectionError
+
 
 # --
 if __name__ == "__main__":
     liste = lire("http://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html")
+    print("Lecture du livre Tipping the velvet 999 :")
     for elt in liste:
         print(f"   -  {elt}")
 

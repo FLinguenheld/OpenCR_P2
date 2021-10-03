@@ -15,11 +15,11 @@ Activez l'environnement virtuel avec la commande :
 ****
 ### Programme
 Autorisez l'execution du fichier extractionBooksToScrape.py :  
->chmod +x extractionBooksToScrape.py
+>chmod +x bookToScrap.py
 
 
 Lancez le script :  
->./extractionBooksToScrape.py
+>./bookToScrap.py
 ****
 ### Déroulement
 Le programme se connecte à <http://books.toscrape.com/>, parcourt les catégories puis chaque article  
