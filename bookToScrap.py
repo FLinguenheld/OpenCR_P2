@@ -31,6 +31,7 @@ if page.status_code == 200:
     except ConnectionError:
         print("\nEchec de la connexion au site")
     except KeyboardInterrupt:
+        categorie.compteurCategorie += 1        # Ajout de la cat en cours
         print("\nArret par l'utilisateur")
     except PermissionError:
         print("\nImpossible de supprimer/créer le dossier d'extraction")

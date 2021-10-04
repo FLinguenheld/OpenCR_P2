@@ -34,16 +34,15 @@ def lecture(url, progression):
                 infoLivre = livre.lire(f"http://books.toscrape.com/catalogue/{elt.find('a')['href'][8:]}")
 
                 afficherProgression(progression, f"{infoLivre[7]} -> {infoLivre[2][:60]}")          # Affiche la cat et livre en cours
-                fichiers.ajouterLivre(infoLivre[7], infoLivre)
+                fichiers.ajouterLivre(infoLivre[7], infoLivre, livre.ENTETE)
                 fichiers.copierCouverture(infoLivre[9], f"{infoLivre[2][:60]} - {infoLivre[1]}")
-
-            compteurCategorie += 1
 
             # Page suivante ?
             suiv = soup.find("li", class_="next")
             if suiv is not None:
                 url = urljoin(page.url, suiv.find("a")["href"])
             else:
+                compteurCategorie += 1
                 break
 
         else:

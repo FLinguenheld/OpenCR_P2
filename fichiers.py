@@ -6,16 +6,14 @@ from pathlib import Path
 import shutil
 import csv
 
-import livre
-
 
 pathExt = Path("./extractions")
 pathImg = Path(f"{pathExt.resolve()}/Images")
 
 # --
-def ajouterLivre(nomFichier, informations):
+def ajouterLivre(nomFichier, informations, enTetes):
     """ Ajoute la liste 'informations' dans le fichier csv renseigné.
-        Le fichier est créé s'il n'existe pas, avec l'ajout des en-têtes (Constante livre.ENTETE).
+        Le fichier est créé s'il n'existe pas, avec l'ajout des en-têtes.
 
         Arguments :
             nomFichier (str) :      Nom du fichier csv sans son extension
@@ -28,7 +26,7 @@ def ajouterLivre(nomFichier, informations):
     if not pathCSV.exists():
         with open (pathCSV.resolve(), "w") as fichier:
             wtr = csv.writer(fichier)
-            wtr.writerow(livre.ENTETE)
+            wtr.writerow(enTetes)
     # --
     with open (pathCSV.resolve(), "a") as fichier:
         wtr = csv.writer(fichier)
