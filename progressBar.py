@@ -3,11 +3,12 @@
 
 from math import floor
 
+
 counter = 0
 def showProgressBar(progression):
     """ Display a progress bar in the terminal with the given list
         Optional text after the bar
-        [XXXX\––––] -- text1 text2
+        [XXXX\––––] text1 text2
 
         Arguments :
             progression (list) :   (total, done, text1, text2...)
@@ -46,7 +47,7 @@ if __name__ == "__main__":
     print("Test progressBar")
     progression = [10, 0, ""]
     for i in range(0, 100000001):
-        
+
         if i % 100000 == 0:
             progression[1] = floor(i * 10 / 100000000)
             progression[2] = str(i)
