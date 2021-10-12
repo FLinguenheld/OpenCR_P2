@@ -5,21 +5,17 @@ Utilisez les bases de Python pour l'analyse de marché
 ![Logo FLinguenheld](https://github.com/FLinguenheld/OpenCR_P2/blob/main/Forelif.png "Pouet")
 ****
 ### Environnement virtuel
+Activez l'environnement virtuel avec la commande :  
+>source env/bin/activate
+
+
 La liste des paquets nécessaires est enregistrée dans le fichier requirements.txt  
 Pour les installer, utilisez la commande :  
 >pip install -r requirements.txt
-
-
-Activez l'environnement virtuel avec la commande :  
->source env/bin/activate
 ****
 ### Programme
-Autorisez l'execution du fichier bookToScrap.py :  
->chmod +x bookToScrap.py
-
-
 Lancez le script :  
->./bookToScrap.py
+>bookToScrap.py
 ****
 ### Déroulement
 Le programme se connecte à <http://books.toscrape.com/>, parcourt les catégories puis chaque article  
