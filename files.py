@@ -8,28 +8,23 @@ import csv
 
 
 pathExtraction = Path("./extractions")
-pathCovers = Path(f"{pathExtraction.resolve()}/Couvertures")
+pathCovers = Path(f"{pathExtraction.resolve()}/couvertures")
 
 # --
-def addRows(fileName, informations, headers):
-    """ Add list informations in the 'fileName.csv'.
+def addRows(fileName, informations):
+    """ Add informations in the 'fileName.csv' (forbiden caracters will be remove).
         File is create with headers if it doesn't exist.
 
         Arguments :
             fileName (str) :        name of file without extension
-            informations (list) :   rows to add in file
+            informations (dict) :   rows to add in file
     """
-
     addFolders()
 
-    pathCSV = Path(f"{pathExtraction.resolve()}/{fileName}.csv")
-    if not pathCSV.exists():
-        with open (pathCSV.resolve(), "w") as fichier:
-            wtr = csv.writer(fichier)
-            wtr.writerow(headers)
-    # --
+    pathCSV = Path(f"{pathExtraction.resolve()}/{adaptFileName(fileName)}.csv")
     with open (pathCSV.resolve(), "a") as fichier:
-        wtr = csv.writer(fichier)
+        wtr = csv.DictWriter(fichier, fieldnames=informations[0].keys())
+        wtr.writeheader()                                                   # Auto ignore if already add
         wtr.writerows(informations)
 
 
@@ -44,17 +39,13 @@ def copyCover(url, fileName):
 
     addFolders()
 
-    # Check and adapt the fileName
-    name = "".join(["-" if c == "-" else " " if not c.isalnum() else c for c in fileName])
-    name = " ".join(name.split())
-
     download = get(url)
-    with open(f"{pathCovers.resolve()}/{name}.jpg", "wb") as image:
+    with open(f"{pathCovers.resolve()}/{adaptFileName(fileName)}.jpg", "wb") as image:
         image.write(download.content)
 
-
+# --
 def addFolders():
-    """ Add the folders ./extractions and ./extractions/Couvertures """
+    """ Add the folders ./extractions and ./extractions/couvertures """
 
     try:
         if not pathExtraction.exists():
@@ -64,11 +55,18 @@ def addFolders():
         raise PermissionError
 
 def removeFolders():
-    """ Remove the folders (and their files) ./extractions and ./extractions/Couvertures """
+    """ Remove the folders (and their files) ./extractions and ./extractions/couvertures """
 
     try:
         if pathExtraction.exists():
             shutil.rmtree(pathExtraction.resolve())
     except:
         raise PermissionError
+
+# --
+def adaptFileName(txt):
+    """ Return txt with only alphanum caracters """
+
+    txt = "".join(["-" if c == "-" else " " if not c.isalnum() else c for c in txt])
+    return " ".join(txt.split())
 

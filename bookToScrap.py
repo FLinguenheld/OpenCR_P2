@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup
 from math import floor
 
 import files
-import book
 from category import getBooksByCategory
 from progressBar import showProgressBar
 
@@ -33,16 +32,19 @@ if page.status_code == 200:
 
             progression[2] = f"{bookList[0]} - Enregistrement csv"                      # Useless ?
             showProgressBar(progression)
-            files.addRows(bookList[0], bookList[1], book.HEADER)
 
-            for l in bookList[1]:
-                progression[2] = f"{bookList[0]} - Copie couverture : {l[2][:60]}"
+            files.addRows(bookList[0], bookList[1])                                     # Save csv
+
+            for l in bookList[1]:                                                       # Download cover
+                progression[2] = f"{bookList[0]} - Copie couverture : {l['title'][:60]}"
                 showProgressBar(progression)
 
-                files.copyCover(l[9], f"{l[2][:60]} - {l[1]}")                          # Book module to see the order list of informations
+                files.copyCover(l["image_url"], f"{l['title'][:60]} - {l['universal_product_code']}")
                 counterBooks += 1
 
             counterCategory += 1
+            
+        print("\033[KTerminé.")
 
 
     except AttributeError:

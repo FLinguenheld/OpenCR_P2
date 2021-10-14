@@ -11,7 +11,7 @@ from book import getBook
 
 # --
 def getBooksByCategory(url, progression = [0, 0, ""]):
-    """ Scan the web page given by url, scrap the book's list to process one by one.
+    """ Scan the web page given by url, scrap the book's list to process one by one (sort by title)
         Go to the next page if necessary.
         Return the category's name and a list with all book's informations.
 
@@ -30,9 +30,13 @@ def getBooksByCategory(url, progression = [0, 0, ""]):
             # Get the category name
             cat = soup.find('h1').string
 
-            for elt in soup.find_all("h3"):
+            # Get and sort the book list for better display
+            l = soup.find_all("h3")
+            l.sort(key=lambda elem : elem.find('a')['title'])
+
+            for elt in l:
                 progression[2] = f"{cat} - Page {numberPage} - "        # Only change the progress text
-                bookList.append(getBook(f"http://books.toscrape.com/catalogue/{elt.find('a')['href'][8:]}", progression))
+                bookList.append(getBook(f"http://books.toscrape.com/catalogue{elt.find('a')['href'][8:]}", progression))
 
             # Next page ?
             nextPage = soup.find("li", class_="next")
@@ -51,5 +55,6 @@ def getBooksByCategory(url, progression = [0, 0, ""]):
 if __name__ == "__main__":
     print("Essai - Récupération de la catégorie 'add a comment'")
     liste = getBooksByCategory("http://books.toscrape.com/catalogue/category/books/add-a-comment_18/index.html", [1, 0, ""])
-    for l in liste[1]:
-        print(f" - {l[2]}")
+    for elem in liste[1]:
+        print(elem["title"])
+
