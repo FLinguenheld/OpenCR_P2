@@ -36,8 +36,8 @@ Il y extrait les informations :
 + image_url
 
 
-Puis les enregistre dans un fichier csv  
-Un fichier csv par catégorie contenant tous les articles  
+Puis les enregistre dans un fichier csv.  
+Un fichier csv par catégorie contenant tous les articles.  
 
 
 Il télécharge également la couverture de chaque article avec comme nom :  
@@ -48,5 +48,5 @@ Ces fichiers seront rangés dans le dossier extractions/
 (Le dossier est supprimé à chaque lancement du programme) 
 
 
-La progression est affichée avec la catégorie et le titre en cours  
-L'execution dure plusieurs minutes (Control-C pour arrêter) 
+La progression est affichée avec la catégorie et le titre en cours.  
+L'execution dure plusieurs minutes (Control-C pour arrêter).  
