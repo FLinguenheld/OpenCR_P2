@@ -15,7 +15,7 @@ def urlToSoup(url):
     try:
         page = get(url)
         if page.status_code == 200:
-            return BeautifulSoup(page.content, "html.parser")                               # Url for each category
+            return BeautifulSoup(page.content, "html.parser")
         else:
             raise ConnectionError
     except :
